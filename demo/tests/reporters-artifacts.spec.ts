@@ -29,8 +29,13 @@ test.describe('Lesson 14 - Artifacts (screenshots + visual baseline)', () => {
   test('2 - visual baseline homepage.png (first run creates baseline) @artifacts', async ({
     page,
   }) => {
+    // Visual baselines are OS/browser specific (-win32 vs -linux).
+    // We only baseline locally; skip on CI to keep GitHub Actions green.
+    // To re-baseline locally: delete tests/reporters-artifacts.spec.ts-snapshots/
+    // and run: npx playwright test tests/reporters-artifacts.spec.ts --project=chromium --update-snapshots
+    test.skip(!!process.env.CI, 'Visual baseline is OS-specific, run locally only.');
     await page.goto('https://www.saucedemo.com/');
-    // First run writes tests/reporters-artifacts.spec.ts-snapshots/homepage-chromium-win32.png
+    // First run writes tests/reporters-artifacts.spec.ts-snapshots/homepage-chromium-<platform>.png
     // and passes; delete that folder to re-baseline. Run with
     // --update-snapshots to refresh the baseline intentionally.
     await expect(page).toHaveScreenshot('homepage.png');
