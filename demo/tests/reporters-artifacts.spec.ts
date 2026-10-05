@@ -26,18 +26,19 @@ test.describe('Lesson 14 - Artifacts (screenshots + visual baseline)', () => {
     await expect(page.getByPlaceholder('Username')).toBeVisible();
   });
 
-  test('2 - visual baseline homepage.png (first run creates baseline) @artifacts', async ({
+  test('2 - visual baseline homepage.png (per-OS baseline, runs on CI too) @artifacts', async ({
     page,
   }) => {
-    // Visual baselines are OS/browser specific (-win32 vs -linux).
-    // We only baseline locally; skip on CI to keep GitHub Actions green.
-    // To re-baseline locally: delete tests/reporters-artifacts.spec.ts-snapshots/
-    // and run: npx playwright test tests/reporters-artifacts.spec.ts --project=chromium --update-snapshots
-    test.skip(!!process.env.CI, 'Visual baseline is OS-specific, run locally only.');
+    // Playwright keeps one baseline PER OS in tests/reporters-artifacts.spec.ts-snapshots/:
+    //   homepage-chromium-win32.png  -> compared on your Windows machine
+    //   homepage-chromium-linux.png  -> compared on the GitHub ubuntu runner
+    // A small tolerance absorbs font/antialiasing differences between machines;
+    // real layout changes (moved/missing elements) still fail loudly.
+    // To re-baseline: delete the snapshots folder and run with --update-snapshots.
     await page.goto('https://www.saucedemo.com/');
-    // First run writes tests/reporters-artifacts.spec.ts-snapshots/homepage-chromium-<platform>.png
-    // and passes; delete that folder to re-baseline. Run with
-    // --update-snapshots to refresh the baseline intentionally.
-    await expect(page).toHaveScreenshot('homepage.png');
+    await expect(page).toHaveScreenshot('homepage.png', {
+      maxDiffPixelRatio: 0.1,
+      threshold: 0.4,
+    });
   });
 });
