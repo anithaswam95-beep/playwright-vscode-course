@@ -32,6 +32,29 @@ jobs:
       - name: Run Playwright tests
         working-directory: demo
         run: npx playwright test
+      - name: Annotate failed tests
+        if: failure()
+        working-directory: demo
+        run: |
+          python3 - <<'PY'
+          import re, sys
+          import xml.etree.ElementTree as ET
+          try:
+              root = ET.parse('results/junit.xml').getroot()
+          except Exception as e:
+              print(f"::error::Could not read junit.xml: {e}")
+              sys.exit(0)
+          clean = lambda s: re.sub(r'\x1b\[[0-9;]*m', '', s or '')
+          found = False
+          for tc in root.iter('testcase'):
+              for f in tc:
+                  if f.tag in ('failure', 'error'):
+                      found = True
+                      msg = clean(f.get('message')).splitlines()[0][:250]
+                      print(f"::error title=Playwright failure::{tc.get('classname')} > {tc.get('name')} :: {msg}")
+          if not found:
+              print("::error::Playwright exited non-zero but junit.xml reports no failed tests (check config/list errors above this step)")
+          PY
       - name: Upload Playwright HTML report
         uses: actions/upload-artifact@v4
         if: '!cancelled()'
