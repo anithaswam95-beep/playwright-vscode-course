@@ -355,7 +355,7 @@ test.describe('Lesson 08 - Browser, Context, Page (Isolation Model)', () => {
   test('2 - EXERCISE: two contexts prove cookies do not leak', async () => {
     // Headed (visible windows) for learning locally; CI runners have no display
     // server, so run headless there or browserType.launch fails on ubuntu-latest.
-    const browser = await chromium.launch({ headless: !process.env.CI });
+    const browser = await chromium.launch({ headless: !!process.env.CI });
 
     // Two isolated incognito profiles — like two different users/machines.
     const userA = await browser.newContext();
