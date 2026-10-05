@@ -323,12 +323,14 @@ test.describe('Lesson 07 - Auto-Waiting (Forget Thread.sleep)', () => {
     await loginSauce(page);
 
     // Trigger a real API fetch and wait for the response instead of sleeping.
+    // Use jsonplaceholder (reliable CORS-enabled API) instead of saucedemo
+    // favicon which is cached / doesn't return 200 via fetch in all envs.
     const [response] = await Promise.all([
       page.waitForResponse(
-        (r) => r.url().includes('saucedemo.com') && r.status() === 200,
+        (r) => r.url().includes('jsonplaceholder.typicode.com/posts/1') && r.status() === 200,
         { timeout: 15_000 },
       ),
-      page.evaluate(() => fetch('https://www.saucedemo.com/favicon.ico')),
+      page.evaluate(() => fetch('https://jsonplaceholder.typicode.com/posts/1')),
     ]);
     expect(response.ok()).toBeTruthy();
   });
