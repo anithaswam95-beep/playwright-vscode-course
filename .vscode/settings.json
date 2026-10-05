@@ -1,0 +1,20 @@
+{
+  "playwright.reuseBrowser": false,
+  "playwright.showTrace": true,
+  "editor.formatOnSave": true,
+  // Cucumber-JS glue for this repo (fixes "Undefined step" in demo/features/login.feature
+  // when this folder is the VS Code workspace root — VS Code ignores demo/.vscode/settings.json).
+  "cucumber.features": [
+    "demo/features/**/*.feature",
+    "features/**/*.feature"
+  ],
+  "cucumber.glue": [
+    "demo/features/steps/**/*.ts",
+    "features/steps/**/*.ts"
+  ],
+  "cucumberautocomplete.steps": [
+    "demo/features/steps/*.ts",
+    "features/steps/*.ts"
+  ],
+  "cucumberautocomplete.strictGherkinCompletion": true
+}

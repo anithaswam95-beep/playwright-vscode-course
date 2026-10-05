@@ -1,0 +1,1 @@
+Playwright Lesson 05 upload fixture file.

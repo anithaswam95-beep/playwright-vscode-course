@@ -1,0 +1,9 @@
+{
+  // Cucumber-JS glue for THIS folder (Lesson 15 parity).
+  // Java side (Eclipse/IntelliJ) is untouched: glue stays com.cp.Steps + com.cp.Hooks.
+  "cucumber.features": ["features/**/*.feature"],
+  "cucumber.glue": ["features/steps/**/*.ts"],
+  "cucumberautocomplete.steps": ["features/steps/*.ts"],
+  "cucumberautocomplete.strictGherkinCompletion": true,
+  "editor.formatOnSave": true
+}
